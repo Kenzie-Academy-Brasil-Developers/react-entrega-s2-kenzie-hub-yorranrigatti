@@ -13,13 +13,18 @@ import {
 import { Container } from "./styles";
 import { Input } from "../../components/input";
 import api from "../../services/api";
+import { toast } from "react-toastify";
+import { Redirect } from "react-router-dom";
 
-export const Login = ({ setUser }) => {
+export const Login = ({ name, setName, auth, setAuth }) => {
   const history = useHistory();
+
+  
   const formSchema = yup.object().shape({
     email: yup.string().email("E-mail inválido").required("E-mail obrigatório"),
     password: yup.string().required("Senha inválida"),
   });
+
   const {
     register,
     handleSubmit,
@@ -27,13 +32,28 @@ export const Login = ({ setUser }) => {
   } = useForm({
     resolver: yupResolver(formSchema),
   });
+
   const onSubmitFunction = async (data) => {
-    const response = await api.post("/sessions", data);
-    const { token } = response.data;
+    const response = await api.post("/sessions", data).catch((err) => {
+      toast.error("Erro na autenticação, cheque suas credenciais");
+    });
+
+    const { token, user } = response.data;
+
     localStorage.setItem("@kenzieHub:token", token);
-    setUser(response.data.user)
+    localStorage.setItem("@kenzieHub:user", JSON.stringify(user));
+
+    setName(response.data.user.name);
+
+    toast.success("Login feito com sucesso!");
+
+    setAuth(true);
     history.push(`/dashboard/${response.data.user.name}`);
   };
+
+  if (auth) {
+    return <Redirect to={`/dashboard/${name}`} />;
+  }
 
   return (
     <Container>

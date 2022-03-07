@@ -1,8 +1,10 @@
-export const TecnologyCard = ({ name, level }) => {
+import { Container } from "./styles";
+
+export const TecnologyCard = ({ tech, ...rest }) => {
   return (
-    <div>
-      <p>{name}</p>
-      <span>{level}</span>
-    </div>
+    <Container {...rest}>
+      <p>{tech.title}</p>
+      <span>{tech.status}</span>
+    </Container>
   );
 };

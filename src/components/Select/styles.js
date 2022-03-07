@@ -4,7 +4,7 @@ import { Grey0, Grey1, Grey2 } from "../../styles/global";
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  width: 91%;
+  width: ${props => props.width};
 
   label {
     font-size: 9.772px;

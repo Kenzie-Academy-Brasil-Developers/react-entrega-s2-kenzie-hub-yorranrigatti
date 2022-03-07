@@ -14,6 +14,7 @@ import {
 import { Container } from "./styles";
 import { Select } from "../../components/Select";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export const Signup = () => {
   const formSchema = yup.object().shape({
@@ -49,7 +50,11 @@ export const Signup = () => {
     delete data.confirm_password;
     axios
       .post("https://kenziehub.herokuapp.com/users", data)
-      .then(history.push("/"));
+      .then(history.push("/"))
+      .catch((err) => {
+        toast.error("Ops! Algo deu errado");
+      });
+    toast.success("Conta criada com sucesso");
   };
   const history = useHistory();
   return (
@@ -115,7 +120,14 @@ export const Signup = () => {
           placeholder="Digite aqui seu número"
           error={errors.contact?.message}
         />
-        <Select register={register} name="course_module" />
+        <Select
+          register={register}
+          name="course_module"
+          op1="Primeiro módulo"
+          op2="Segundo módulo"
+          op3="Terceiro módulo"
+          width="91%"
+        />
         <Button
           onHover={ColorPrimary}
           backgroundColor={ColorPrimaryNegative}
